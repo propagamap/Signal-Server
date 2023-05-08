@@ -18,7 +18,7 @@
             // -m Metric units of measurement
             // -pm Propagation model. 3: Hata
             // -pe Propagation model mode: 3=Rural
-            "args": ["-dbg", "-lat", "40.402770", "-lon", "-1.212317", "-f", "450", "-txh", "20", "-m", "-pm", "3", "-pe", "3"],
+            "args": ["-dbg", "-nothreads", "-lat", "40.402770", "-lon", "-1.212317", "-f", "450", "-txh", "20", "-m", "-pm", "3", "-pe", "3"],
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb"
         },
