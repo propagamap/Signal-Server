@@ -1128,6 +1128,7 @@ int main(int argc, char *argv[])
 		fprintf(stdout, "     -resample Reduce Lidar resolution by specified factor (2 = 50%%)\n");
 		fprintf(stdout, "Output:\n");
 		fprintf(stdout, "     -o basename (Output file basename - required)\n");
+		fprintf(stdout, "     -o-plo basename (Output file basename of plot raw content)\n");
 		fprintf(stdout,	"     -dbm Plot Rxd signal power instead of field strength in dBuV/m\n");
 		fprintf(stdout, "     -rt Rx Threshold (dB / dBm / dBuV/m)\n");
 		fprintf(stdout, "     -R Radius (miles/kilometers)\n");
@@ -1186,8 +1187,6 @@ int main(int argc, char *argv[])
 	contour_threshold = 0;
 	resample = 0;
 
-	// TODO: Implement one more argument in the command to put the name of this file with the db output
-	strcpy(ano_filename, "output.txt");
 	earthradius = EARTHRADIUS;
 	max_range = 1.0;
 	propmodel = 1;		//ITM
@@ -1343,6 +1342,21 @@ int main(int argc, char *argv[])
 				strncpy(tx_site[0].name, "Tx", 2);
 				tx_site[0].filename[0] = '\0';
 				fprintf(stderr,"Writing to stdout\n");
+			}
+		}
+
+		if (strcmp(argv[x], "-o-plo") == 0) {
+			z = x + 1;
+
+			if (z <= y && argv[z][0] && argv[z][0] != '-') {
+				strncpy(ano_filename, argv[z], 253);
+			} else {
+				if (mapfile[0] == '\0')
+					strcpy(ano_filename, "output.txt");
+				else {
+					strncpy(ano_filename, mapfile, 249); // 253 - strlen(".txt")
+					strcat(ano_filename, ".txt");
+				}
 			}
 		}
 

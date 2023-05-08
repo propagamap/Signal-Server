@@ -160,7 +160,7 @@ int image_get_filename(image_ctx_t *ctx, char *out, size_t len_out, char *in){
 	if(len_src > len_ext && strcmp(in+len_src-len_ext,ctx->extension) == 0){
 		/* Already has correct extension and fits in buffer */
 		if(len_src < len_out)
-			strncpy(in,out,len_out);
+			strncpy(out,in,len_out);
 		else
 			success = ENOMEM;
 	}else if(len_src > len_ext){

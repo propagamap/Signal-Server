@@ -117,6 +117,7 @@ Input:
      -resample Reduce Lidar resolution by specified factor (2 = 50%)
 Output:
      -o basename (Output file basename - required)
+     -o-plo basename (Output file basename of plot raw content)
      -dbm Plot Rxd signal power instead of field strength in dBuV/m
      -rt Rx Threshold (dB / dBm / dBuV/m)
      -R Radius (miles/kilometers)
