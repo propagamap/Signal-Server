@@ -1354,8 +1354,9 @@ int main(int argc, char *argv[])
 				if (mapfile[0] == '\0')
 					strcpy(ano_filename, "output.txt");
 				else {
-					strncpy(ano_filename, mapfile, 249); // 253 - strlen(".txt")
-					strcat(ano_filename, ".txt");
+					const char *extending = ".txt";
+					strncpy(ano_filename, mapfile, 253 - strlen(extending)); 
+					strcat(ano_filename, extending);
 				}
 			}
 		}
