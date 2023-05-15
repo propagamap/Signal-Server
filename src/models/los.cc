@@ -33,8 +33,34 @@ namespace {
 		int propmodel, knifeedge, pmenv;
 	};
 
+	void init_processed()
+	{
+		int i;
+		int x;
+		int y;
+
+		processed = new bool **[MAXPAGES];
+		for (i = 0; i < MAXPAGES; i++) {
+			processed[i] = new bool *[ippd];
+			for (x = 0; x < ippd; x++)
+				processed[i][x] = new bool [ippd];
+		}
+
+		for (i = 0; i < MAXPAGES; i++) {
+			for (x = 0; x < ippd; x++) {
+				for (y = 0; y < ippd; y++)
+					processed[i][x][y] = false;
+			}
+		}
+
+		has_init_processed = true;
+	}
+
 	void* rangePropagation(void *parameters)
 	{
+		if(!has_init_processed)
+			init_processed();
+
 		propagationRange *v = (propagationRange*)parameters;
 		if(v->use_threads) {
 			alloc_elev();
@@ -77,29 +103,6 @@ namespace {
 				free_path();
 		}
 		return NULL;
-	}
-
-	void init_processed()
-	{
-		int i;
-		int x;
-		int y;
-
-		processed = new bool **[MAXPAGES];
-		for (i = 0; i < MAXPAGES; i++) {
-			processed[i] = new bool *[ippd];
-			for (x = 0; x < ippd; x++)
-				processed[i][x] = new bool [ippd];
-		}
-
-		for (i = 0; i < MAXPAGES; i++) {
-			for (x = 0; x < ippd; x++) {
-				for (y = 0; y < ippd; y++)
-					processed[i][x][y] = false;
-			}
-		}
-
-		has_init_processed = true;
 	}
 
 	bool can_process(double lat, double lon)
@@ -147,8 +150,10 @@ namespace {
   
 	void beginThread(void *arg)
 	{
+		/* Moved into rangePropagation to ensure this Initialization when thread is not used
 		if(!has_init_processed)
 			init_processed();
+		*/
 
 		int rc = pthread_create(&threads[thread_count], NULL, rangePropagation, arg);
 		if (rc)

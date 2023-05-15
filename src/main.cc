@@ -287,7 +287,7 @@ unsigned char GetSignal(double lat, double lon)
 		return 0;
 }
 
-double GetElevation(struct site location)
+double _GetElevation(struct site location)
 {
 	/* This function returns the elevation (in feet) of any location
 	   represented by the digital elevation model data in memory.
@@ -310,7 +310,27 @@ double GetElevation(struct site location)
 	}
 
 	if (found)
-		elevation = 3.28084 * dem[indx].data[x][y];
+		elevation = FEETS_PER_METER * dem[indx].data[x][y];
+	else
+		elevation = -5000.0;
+
+	return elevation;
+}
+
+double GetElevation(struct site location)
+{
+	/* This function returns the elevation (in feet) of any location
+	   represented by the digital elevation model data in openelevationservice.
+	   Function returns -5000.0 for locations not found in openelevationservice. */
+
+	char found;
+	double elevation;
+
+	// TODO: Implement the corresponding HTTP request to get the elevation in location.lat and location.lot
+	elevation = 0;
+
+	if (found)
+		elevation *= FEETS_PER_METER;
 	else
 		elevation = -5000.0;
 
@@ -1108,6 +1128,7 @@ int main(int argc, char *argv[])
 		fprintf(stdout, "     -resample Reduce Lidar resolution by specified factor (2 = 50%%)\n");
 		fprintf(stdout, "Output:\n");
 		fprintf(stdout, "     -o basename (Output file basename - required)\n");
+		fprintf(stdout, "     -o-plo basename (Output file basename of plot raw content)\n");
 		fprintf(stdout,	"     -dbm Plot Rxd signal power instead of field strength in dBuV/m\n");
 		fprintf(stdout, "     -rt Rx Threshold (dB / dBm / dBuV/m)\n");
 		fprintf(stdout, "     -R Radius (miles/kilometers)\n");
@@ -1166,7 +1187,6 @@ int main(int argc, char *argv[])
 	contour_threshold = 0;
 	resample = 0;
 
-	ano_filename[0] = 0;
 	earthradius = EARTHRADIUS;
 	max_range = 1.0;
 	propmodel = 1;		//ITM
@@ -1322,6 +1342,22 @@ int main(int argc, char *argv[])
 				strncpy(tx_site[0].name, "Tx", 2);
 				tx_site[0].filename[0] = '\0';
 				fprintf(stderr,"Writing to stdout\n");
+			}
+		}
+
+		if (strcmp(argv[x], "-o-plo") == 0) {
+			z = x + 1;
+
+			if (z <= y && argv[z][0] && argv[z][0] != '-') {
+				strncpy(ano_filename, argv[z], 253);
+			} else {
+				if (mapfile[0] == '\0')
+					strcpy(ano_filename, "output.txt");
+				else {
+					const char *extending = ".txt";
+					strncpy(ano_filename, mapfile, 253 - strlen(extending)); 
+					strcat(ano_filename, extending);
+				}
 			}
 		}
 

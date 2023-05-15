@@ -8,7 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Optimization
-set(CMAKE_CXX_FLAGS "-O2")
+# TODO: We will temporarily set this to -g, but it should be -O2 and we should have two targets in this CMakeFile: release (with -O2 and without -g) and debug (without -O2 and with -g)
+set(CMAKE_CXX_FLAGS "-g")
 
 # Compiler warnings
 if (MSVC)
@@ -121,7 +122,7 @@ target_link_libraries(signalserverLIDAR
 		  )
 
 # INSTALL target (make install)
-install(TARGETS signalserver)
-install(TARGETS signalserverHD)
-install(TARGETS signalserverLIDAR)
+install(TARGETS signalserver DESTINATION build)
+install(TARGETS signalserverHD DESTINATION build)
+install(TARGETS signalserverLIDAR DESTINATION build)
 
