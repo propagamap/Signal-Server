@@ -39,6 +39,9 @@ double version = 3.3;
 #include "models/pel.hh"
 #include "image.hh"
 
+#include <curl/curl.h>
+#include <json-c/json.h>
+
 int MAXPAGES = 10*10;
 int IPPD = 1200;
 int ARRAYSIZE = (MAXPAGES * IPPD) + 10;
@@ -70,6 +73,8 @@ struct dem *dem;
 
 struct LR LR;
 struct region region;
+
+CURL *curl;
 
 double arccos(double x, double y)
 {
@@ -317,24 +322,86 @@ double _GetElevation(struct site location)
 	return elevation;
 }
 
+size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
+    // Castear el puntero 'userdata' al tipo apropiado
+    char *json_data = (char *)userdata;
+
+    // Calcular el tamaño total de los datos recibidos
+    size_t total_size = size * nmemb;
+
+    // Copiar los datos recibidos al buffer 'json_data'
+    strncpy(json_data, ptr, total_size);
+
+    // Devolver el tamaño total de los datos recibidos
+    return total_size;
+}
+
+
 double GetElevation(struct site location)
 {
-	/* This function returns the elevation (in feet) of any location
-	   represented by the digital elevation model data in openelevationservice.
-	   Function returns -5000.0 for locations not found in openelevationservice. */
+  /* This function returns the elevation (in feet) of any location
+     represented by the digital elevation model data in openelevationservice.
+     Function returns -5000.0 for locations not found in openelevationservice. */
 
-	char found;
-	double elevation;
+  char found;
+  double elevation;
+  int x = 0, y = 0, indx;
 
-	// TODO: Implement the corresponding HTTP request to get the elevation in location.lat and location.lot
-	elevation = 0;
+  CURLcode res;
 
-	if (found)
-		elevation *= FEETS_PER_METER;
-	else
-		elevation = -5000.0;
 
-	return elevation;
+  for (indx = 0, found = 0; indx < MAXPAGES && found == 0;) {
+    x = (int)rint(ppd * (location.lat - dem[indx].min_north));
+    y = mpi - (int)rint(yppd * (LonDiff(dem[indx].max_west, location.lon)));
+
+    if (x >= 0 && x <= mpi && y >= 0 && y <= mpi)
+      found = 1;
+    else
+      indx++;
+  }
+
+  curl = curl_easy_init();
+
+  if (found) {
+    if (curl) {
+      char url[255];
+      char json_data[1024];
+
+
+
+
+      snprintf(url, 255, "http://localhost:5000/elevation/point?geometry=%f,%f", location.lon, location.lat);
+      curl_easy_setopt(curl, CURLOPT_URL, url);
+      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, json_data);
+      res = curl_easy_perform(curl);
+      if (res != CURLE_OK) {
+        fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+      }
+      else {
+        json_object *json = json_tokener_parse(json_data);
+		printf("%s\n", json_data);
+        json_object *geometry_json;
+        json_object_object_get_ex(json, "geometry", &geometry_json);
+        json_object *coordinates_json;
+        json_object_object_get_ex(geometry_json, "coordinates", &coordinates_json);
+        json_object *elevation_json;
+
+        if (json_object_array_length(coordinates_json) > 0) {
+          elevation_json = json_object_array_get_idx(coordinates_json, 2);
+          elevation = json_object_get_double(elevation_json);
+          found = 1;
+        }
+      }
+      curl_easy_cleanup(curl);
+    }
+
+    elevation *= FEETS_PER_METER;
+  }
+  else
+    elevation = -5000.0;
+
+  return elevation;
 }
 
 int AddElevation(double lat, double lon, double height, int size)

@@ -8,8 +8,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Optimization
-# TODO: We will temporarily set this to -g, but it should be -O2 and we should have two targets in this CMakeFile: release (with -O2 and without -g) and debug (without -O2 and with -g)
+
+# Debug
 set(CMAKE_CXX_FLAGS "-g")
+
 
 # Compiler warnings
 if (MSVC)
@@ -47,10 +49,13 @@ find_library(bz2 bz2)
 find_library(dl dl)
 find_library(pthread pthread)
 find_library(z z)
+find_library(JSON_C_LIBRARY json-c)
 
 add_executable(signalserver main.cc)
 add_executable(signalserverHD main.cc)
 add_executable(signalserverLIDAR main.cc)
+
+find_package(CURL REQUIRED)
 
 target_link_libraries(signalserver 
 			PUBLIC image
@@ -73,6 +78,8 @@ target_link_libraries(signalserver
 			PUBLIC dl
 			PUBLIC pthread
 			PUBLIC z
+			CURL::libcurl
+			${JSON_C_LIBRARY}
 		  )
 
 target_link_libraries(signalserverHD 
@@ -96,6 +103,8 @@ target_link_libraries(signalserverHD
 			PUBLIC dl
 			PUBLIC pthread
 			PUBLIC z
+			CURL::libcurl
+			${JSON_C_LIBRARY}
 		  )
 
 target_link_libraries(signalserverLIDAR 
@@ -119,6 +128,8 @@ target_link_libraries(signalserverLIDAR
 			PUBLIC dl
 			PUBLIC pthread
 			PUBLIC z
+			CURL::libcurl
+			${JSON_C_LIBRARY}
 		  )
 
 # INSTALL target (make install)

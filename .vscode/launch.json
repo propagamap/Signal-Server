@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/signalserver",
+            "program": "${workspaceFolder}/src/signalserver",
             // -dbg Verbose debug messages
             // -nothreads Turn off threaded processing
             // -lat Tx Latitude (decimal degrees) -70/+70
@@ -18,7 +18,7 @@
             // -m Metric units of measurement
             // -pm Propagation model. 3: Hata
             // -pe Propagation model mode: 3=Rural
-            "args": ["-dbg", "-nothreads", "-lat", "40.402770", "-lon", "-1.212317", "-f", "450", "-txh", "20", "-m", "-pm", "3", "-pe", "3", "-o-plo"],
+            "args": ["-dbg", "-nothreads", "-lat", "40.50101", "-lon", "-3.38036", "-f", "450", "-txh", "20", "-m", "-pm", "3", "-pe", "3", "-o-plo"],
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb"
         },
