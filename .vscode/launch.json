@@ -19,7 +19,9 @@
             // -m Metric units of measurement
             // -pm Propagation model. 3: Hata
             // -pe Propagation model mode: 3=Rural
-            "args": ["-dbg", "-nothreads", "-sdf", "./srtm", "-lat", "40.50101", "-lon", "-3.38036", "-f", "450", "-txh", "20", "-m", "-pm", "3", "-pe", "3", "-o-plo"],
+            // -o-plo Generate plot raw content (.txt)
+            // -color Custom color palette
+            "args": ["-dbg", "-nothreads", "-sdf", "./srtm", "-lat", "40.50101", "-lon", "-3.38036", "-f", "450", "-txh", "20", "-m", "-pm", "3", "-pe", "3", "-o-plo", "-color", "custom.lcf"],
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb"
         },

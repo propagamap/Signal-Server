@@ -1,3 +1,17 @@
+### Recommend Commands
+
+Fast build:
+
+```bash
+mkdir -p build && cd build && cmake ../src && make && cd ..
+```
+
+Convert ppm to png:
+
+```bash
+convert output.ppm -transparent white output.png
+```
+
 # Signal Server
 Multi-threaded radio propagation simulator based upon SPLAT! by Alex Farrant QCVS, 2E0TDW. 
 

@@ -38,7 +38,7 @@ def tif2sdf(tif_path):
             neg_right = format_neg_longitude(tif_left + j + 1)
             sdf_path = f"{bottom}{S}{top}{S}{neg_right}{S}{neg_left}.sdf"
 
-            print("Generating", sdf_path, end=" -> ")
+            print("  Generating", sdf_path, end=" -> ")
             sdf_file = open(sdf_path, "w", encoding="ascii", newline="\n")
 
             # Corner: left, bottom, right, top
@@ -67,7 +67,7 @@ def tif2sdf(tif_path):
                 os.remove(sdf_path)
 
     tif_file.close()
-    print("Convertion of", tif_path, "complete")
+    print("Convertion of", tif_path, "complete\n")
 
 
 if __name__ == "__main__":
