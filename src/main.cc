@@ -287,7 +287,7 @@ unsigned char GetSignal(double lat, double lon)
 		return 0;
 }
 
-double _GetElevation(struct site location)
+double GetElevation(struct site location)
 {
 	/* This function returns the elevation (in feet) of any location
 	   represented by the digital elevation model data in memory.
@@ -317,7 +317,7 @@ double _GetElevation(struct site location)
 	return elevation;
 }
 
-double GetElevation(struct site location)
+double _GetElevation(struct site location)
 {
 	/* This function returns the elevation (in feet) of any location
 	   represented by the digital elevation model data in openelevationservice.

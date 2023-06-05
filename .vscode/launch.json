@@ -11,6 +11,7 @@
             "program": "${workspaceFolder}/build/signalserver",
             // -dbg Verbose debug messages
             // -nothreads Turn off threaded processing
+            // -sdf Directory containing SRTM derived .sdf DEM tiles (may be .gz or .bz2)
             // -lat Tx Latitude (decimal degrees) -70/+70
             // -lon Tx Longitude (decimal degrees) -180/+180
             // -f Tx Frequency (MHz) 20MHz to 100GHz (LOS after 20GHz)
@@ -18,7 +19,9 @@
             // -m Metric units of measurement
             // -pm Propagation model. 3: Hata
             // -pe Propagation model mode: 3=Rural
-            "args": ["-dbg", "-nothreads", "-lat", "40.402770", "-lon", "-1.212317", "-f", "450", "-txh", "20", "-m", "-pm", "3", "-pe", "3", "-o-plo"],
+            // -o-plo Generate plot raw content (.txt)
+            // -color Custom color palette
+            "args": ["-dbg", "-nothreads", "-sdf", "./srtm", "-lat", "40.50101", "-lon", "-3.38036", "-f", "450", "-txh", "20", "-m", "-pm", "3", "-pe", "3", "-o-plo", "-color", "custom.lcf"],
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb"
         },
